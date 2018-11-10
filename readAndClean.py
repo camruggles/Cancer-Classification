@@ -2,6 +2,10 @@
 
 import numpy as np
 import pandas as pd
+
+
+#this uses all 32 columns, and gets the 'M' and 'B' labels and converts them to 1 and -1 for the y vector
+#I eliminated one column that had strictly nan values
 def getCleanedData(filename):
 	data = pd.read_csv(filename)
 
