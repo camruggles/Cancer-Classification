@@ -19,6 +19,7 @@ def train(L, X, y):
                 w = w + y[i]*X[i]
 
     theta = w
+    theta = theta.reshape((n, 1))
     return theta
 
 
@@ -29,7 +30,7 @@ def train(L, X, y):
 
 def test(theta, x):
     w = theta
-    if np.dot(w, x) > 0:
+    if np.dot(w.T, x) > 0:
         label = 1
     else:
         label = -1
