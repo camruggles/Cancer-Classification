@@ -1,8 +1,30 @@
 
+####################################################
+# Cleaning Data because pandas doesnt work for me 
+####################################################
 
 import numpy as np
 import pandas as pd
+np.set_printoptions(suppress=True)
 
+def getCleanedData(filename):
+    data = pd.read_csv(filename)
+
+    # Diagnosis
+    y = data.iloc[:,1]
+    y = y.replace(['M','B'], [1, -1])
+
+    # Looking at columns: radius, texture, perimeter, area, smoothness, compactness, concavity, concave points
+    # symmetry and fractal dimension 
+    data = data.iloc[:, 2:11]
+    
+    return data.values, y.values
+    
+X, y = getCleanedData("data.csv")
+
+'''
+import numpy as np
+import pandas as pd
 
 # this uses all 32 columns, and gets the 'M' and 'B' labels
 #   and converts them to 1 and -1 for the y vector
@@ -33,3 +55,6 @@ def getCleanedData(filename):
 
 
 X, y = getCleanedData("data.csv")
+print X
+
+'''
