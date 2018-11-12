@@ -16,7 +16,7 @@ def getCleanedData(filename):
 
     # Looking at columns: radius, texture, perimeter, area, smoothness, compactness, concavity, concave points
     # symmetry and fractal dimension 
-    data = data.iloc[:, 2:11]
+    data = data.iloc[:, 2:12]
     
     return data.values, y.values
     
