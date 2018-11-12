@@ -1,0 +1,10 @@
+Fold 0, total correct 48 / 56
+Fold 1, total correct 52 / 56
+Fold 2, total correct 44 / 56
+Fold 3, total correct 47 / 56
+Fold 4, total correct 47 / 56
+Fold 5, total correct 46 / 56
+Fold 6, total correct 48 / 56
+Fold 7, total correct 50 / 56
+Fold 8, total correct 46 / 56
+Fold 9, total correct 48 / 56
