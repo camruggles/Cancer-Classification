@@ -1,15 +1,20 @@
-import cvxopt as co
 import numpy as np
 from sklearn import svm
 from sklearn.svm import SVC
-# Input: numpy matrix X of featrues, with n rows (samples), d columns (features)
-#	X[i, j] is the j-th feature of the i-th sample
-#	numpy vector y of labels, with n rows (samples), 1 column
-#	y[i] is the label (+1 of -1) of the i-th sample
-# Output: numpy vector alpha of n rows, 1 column
-def train(X, y):
-    d = np.size(X, 1)
-    n = np.size(X, 0)
-    rbf_svc = svm.SVC(kernel = 'rbf')
-    rbf_svc.fit(X, y)
-    rbf_svc.predict(X)
+import read_clean
+import matplotlib.pyplot as plt
+
+###############################################
+# Using the scikit learn svm package to create an rbf kernel svm
+###############################################
+
+X, y = read_clean.getCleanedData("data.csv")
+
+#choosing a good gamma and C to use 
+
+#creating and fitting the kernel to the data
+rbf_svc = svm.SVC(kernel = 'rbf', gamma = 0.1, C = 1)   #should modify hyperparams to test
+rbf_svc.fit(X, y)
+
+#visualizing the data
+
