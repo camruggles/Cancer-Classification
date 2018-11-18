@@ -1,5 +1,6 @@
 import numpy as np
-from sklearn import svm
+from sklearn import svm, model_selection
+from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
 import read_clean
 import matplotlib.pyplot as plt
@@ -10,7 +11,10 @@ import matplotlib.pyplot as plt
 
 X, y = read_clean.getCleanedData("data.csv")
 
-#choosing a good gamma and C to use 
+#choosing a good gamma and C to use - parameter tuning from GridSearchCV
+grid_search = GridSearchCV(svm.SVC(kernel = 'rbf'), {'C': [0.1, 1, 10], 'gamma': [0.1, 1, 10]}, cv=10)
+grid_search.fit(X, y)
+print grid_search.best_params_
 
 #creating and fitting the kernel to the data
 rbf_svc = svm.SVC(kernel = 'rbf', gamma = 0.1, C = 1)   #should modify hyperparams to test
