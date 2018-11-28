@@ -24,6 +24,12 @@ def cross_validation_split(dataset, folds=3):
 
 
 def main():
+    try:
+        foldcount = int(sys.argv[1])
+    except IndexError:
+        print 'Please list the number of folds for cross validation'
+        print 'as a command line argument, for example : python cv.py 10'
+        quit()
     #  extract the data and the labels
     X, y = dataCollector.getCleanedData("data.csv")
     seed(1)
@@ -35,17 +41,17 @@ def main():
     dataset[:, 1:] = X
 
     # extract 10 folds from the data
-    folds = cross_validation_split(dataset, 10)
+    folds = cross_validation_split(dataset, foldcount)
     # print(folds)
 
     # for each fold, figure out how many data points are in the folds
     #  excluding the one about to be tested
-    for i in xrange(10):
+    for i in xrange(foldcount):
         totalRows = 0
         totalCols = 0
         n, d = dataset.shape
         totalCols = d
-        for j in xrange(10):
+        for j in xrange(foldcount):
             if j == i:
                 continue
             currentFold = np.matrix(folds[j])
@@ -56,7 +62,7 @@ def main():
         # and fill it with the training data
         trainingSet = np.empty((totalRows, totalCols))
         rowCounter = 0
-        for j in xrange(10):
+        for j in xrange(foldcount):
             if j == i:
                 continue
             currentfold = np.matrix(folds[j])
