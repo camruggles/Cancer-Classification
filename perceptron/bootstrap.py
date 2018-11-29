@@ -34,9 +34,6 @@ def main():
     n, d = X.shape
 
     # create a dataset with the labels and the data mixed together
-    dataset = np.zeros((n, d+1))
-    dataset[:, 0] = y
-    dataset[:, 1:] = X
     bs_correct = bootstrapping(10, X, y)
     print 'individual correctness'
     print bs_correct
