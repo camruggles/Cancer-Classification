@@ -32,6 +32,7 @@ def main():
         quit()
     #  extract the data and the labels
     X, y = dataCollector.getCleanedData("data.csv")
+    results = np.zeros(foldcount)
     seed(1)
     n, d = X.shape
 
@@ -94,6 +95,7 @@ def main():
 
         # print the results of the test
         sys.stdout.write('Fold %d, total correct %d / %d\n' % (i, cc, ttc))
+        results[i] = float(cc) / float(ttc)
 
 
 main()
