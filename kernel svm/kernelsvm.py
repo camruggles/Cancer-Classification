@@ -22,6 +22,40 @@ gamma, C = grid_search.best_params_
 # rbf_svc = svm.SVC(kernel = 'rbf', gamma = 0.1, C = 1)   #should modify hyperparams to test - see above gridsearch for finding best params
 # rbf_svc.fit(X, y)
 
+#hyperparameter tuning with cross validation (2-fold)
+positive_samples = list(np.where(y==1)[0])
+negative_samples = list(np.where(y==0)[0])
+
+samples_in_fold1 = positive_samples[0:len(X)/2] + negative_samples[0:len(X)/2]
+samples_in_fold2 = positive_samples[len(X)/2:] + negative_samples[len(X)/2:]
+
+C_list = [0.01, 0.1, 1, 10, 100]
+gamma_list = [0.01, 0.1, 1, 10, 100]
+B = 30
+
+y_pred = np.zeros((len(X), 1))
+
+best_err = 1.1
+best_C = 0.0
+best_gamma = 0.0
+for C in C_list:
+    err = bootstrapping(B, X[samples_in_fold1], y[samples_in_fold1], C, 0.1)
+    print "C=", C, ", err=", err
+    if err < best_err:
+        best_err = err
+        best_C = C
+
+print "best_C=", best_C
+
+for gamma in gamma_list:
+    err = bootstrapping(B, X[samples_in_fold1], y[samples_in_fold1], best_C, gamma)
+    print "gamma=", gamma, ", err=", err
+    if err < best_err:
+        best_err = err
+        best_gamma = gamma
+
+print "best_gamma=", best_gamma
+
 #LOOCV
 n = len(X)
 d = len(X[0])
@@ -50,3 +84,15 @@ print(err)
 
 #visualizing the data
 
+
+def bootstrapping_for_tuning(B, X_subset, y_subset, C, gamma):
+    n = len(X_subset)
+    bs_err = np.zeros(B)
+    for b in range(B):
+        train_samples = list(np.random.randint(0, n, n))
+        test_samples = list(set(range(n)) - set(train_samples))
+        alg = svm.SVC(kernel = 'rbf', gamma = gamma, C = C)
+        alg.fit(X_subset[train_samples], y_subset[train_samples])
+        bs_err[b] = np.mean(y_subset[test_samples] != alg.predict(X_subset[test_samples]))
+    err = np.mean(bs_err)
+    return err
