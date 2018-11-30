@@ -11,13 +11,13 @@ import matplotlib.pyplot as plt
 
 X, y = read_clean.getCleanedData("data.csv")
 
-#choosing a good gamma and C to use - parameter tuning from GridSearchCV
-grid_search = GridSearchCV(svm.SVC(kernel = 'rbf'), {'C': [0.01, 0.1, 1, 10], 'gamma': [0.01, 0.1, 1, 10]}, cv=10)
+# #choosing a good gamma and C to use - parameter tuning from GridSearchCV
+# grid_search = GridSearchCV(svm.SVC(kernel = 'rbf'), {'C': [0.01, 0.1, 1, 10], 'gamma': [0.01, 0.1, 1, 10]}, cv=10)
 
-#creating and fitting the kernel to the data
-grid_search.fit(X, y)
-print grid_search.best_params_
-gamma, C = grid_search.best_params_
+# #creating and fitting the kernel to the data
+# grid_search.fit(X, y)
+# print grid_search.best_params_
+# gamma, C = grid_search.best_params_
 
 # rbf_svc = svm.SVC(kernel = 'rbf', gamma = 0.1, C = 1)   #should modify hyperparams to test - see above gridsearch for finding best params
 # rbf_svc.fit(X, y)
@@ -39,7 +39,7 @@ best_err = 1.1
 best_C = 0.0
 best_gamma = 0.0
 for C in C_list:
-    err = bootstrapping(B, X[samples_in_fold1], y[samples_in_fold1], C, 0.1)
+    err = bootstrapping_for_tuning(B, X[samples_in_fold1], y[samples_in_fold1], C, 0.1)
     print "C=", C, ", err=", err
     if err < best_err:
         best_err = err
@@ -48,13 +48,45 @@ for C in C_list:
 print "best_C=", best_C
 
 for gamma in gamma_list:
-    err = bootstrapping(B, X[samples_in_fold1], y[samples_in_fold1], best_C, gamma)
+    err = bootstrapping_for_tuning(B, X[samples_in_fold1], y[samples_in_fold1], best_C, gamma)
     print "gamma=", gamma, ", err=", err
     if err < best_err:
         best_err = err
         best_gamma = gamma
 
 print "best_gamma=", best_gamma
+
+alg = svm.SVC(kernel = 'rbf', gamma = best_gamma, C = best_C)
+alg.fit(X[samples_in_fold1], y[samples_in_fold1])
+y_pred[samples_in_fold2] = alg.predict(X[samples_in_fold2])
+
+best_err = 1.1
+best_C = 0.0
+best_gamma = 0.0
+for C in C_list:
+    err = bootstrapping_for_tuning(B, X[samples_in_fold2], y[samples_in_fold2], C, 0.1)
+    print "C=", C, ", err=", err
+    if err < best_err:
+        best_err = err
+        best_C = C
+
+print "best_C=", best_C
+
+for gamma in gamma_list:
+    err = bootstrapping_for_tuning(B, X[samples_in_fold2], y[samples_in_fold2], best_C, gamma)
+    print "gamma=", gamma, ", err=", err
+    if err < best_err:
+        best_err = err
+        best_gamma = gamma
+
+print "best_gamma=", best_gamma
+
+alg = svm.SVC(kernel = 'rbf', gamma = best_gamma, C = best_C)
+alg.fit(X[samples_in_fold2], y[samples_in_fold2])
+y_pred[samples_in_fold1] = alg.predict(X[samples_in_fold1])
+
+err = np.mean(y!=y_pred)
+print "Hyperparameter tuning err=", err
 
 #LOOCV
 n = len(X)
@@ -73,13 +105,13 @@ for i in range(n):
     X_train = X[range_except_i]
     y_train = [y[t] for t in range_except_i]
 
-    rbf_svc = svm.SVC(kernel = 'rbf', gamma = 0.1, C = 1)   #should modify hyperparams to test - see above gridsearch for finding best params
+    rbf_svc = svm.SVC(kernel = 'rbf', gamma = best_gamma, C = best_C)   #should modify hyperparams to test - see above gridsearch for finding best params
     rbf_svc.fit(X, y)
 
     y_pred[i] = rbf_svc.predict(X[i])
 
 err = np.mean(y!=y_pred)
-print(err)
+print "LOOCV err=", err
 
 
 #visualizing the data
