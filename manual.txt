@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 The data can be found in every folder titled “data.csv” (we do not have a dataset folder) and the "read_clean.py" processes the data.
 Each folder contains the code for each machine learning model. 
+=======
+The data can be found in every folder titled “data.csv” and the read_clean.py processes the data.
+PLEASE NOTE: SOME FILES HAVE SEEDS FOR RANDOMIZATION TO ALLOW TAS TO REPROUCE THE DATA IN OUR FINAL REPORT. 
+>>>>>>> d65e07e593442eb856893db1051fa54d8bb8849e
 
 Libraries to Install:
 pip install -U scikit-learn
 
 K-Means:
 The bash script RUN_ME.sh should run all the files. The bash script also contains the individual commands. Please ignore anaconda warnings if any.
+
+Kernel SVM: 
+The bash script RUN_KERNEL in the folder kernel svm runs the command python kernelsvm.py. The hyperparameter tuning and LOOCV can take a long time to run. 
+
+Perceptron: Please see the manual.txt file in perceptron folder
 
 Understanding the Data:
 The bash script RUN_ME.sh should run all the files. The bash script also contains the individual commands. Please ignore anaconda warnings if any.
