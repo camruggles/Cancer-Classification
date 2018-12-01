@@ -12,7 +12,6 @@ def bootstrapping(B, X, y):
     specificity = np.zeros(B)
 
     n, d = X.shape
-    bs_err = np.zeros(B)
     for b in range(B):
         train_samples = list(np.random.randint(0, n, n))
         test_samples = list(set(range(n)) - set(train_samples))
@@ -47,9 +46,9 @@ def bootstrapping(B, X, y):
             if testResult == -1 and test_label == -1:
                 tn += 1
 
-        print 'tp, tn, fp, fn'
-        print tp, tn, fp, fn
-        print ''
+        # print 'tp, tn, fp, fn'
+        # print tp, tn, fp, fn
+        # print ''
 
         try:
             accuracy[b] = float(tp + tn) / float(fn + fp + tp + tn)
@@ -91,16 +90,16 @@ def main():
 
     # create a dataset with the labels and the data mixed together
     acc, err, recall, precision, specificity = bootstrapping(B, X, y)
-    print 'accuracy'
-    print acc
-    print 'error'
-    print err
-    print 'recall'
-    print recall
-    print 'precision'
-    print precision
-    print 'specificity'
-    print specificity
+    # print 'accuracy'
+    # print acc
+    # print 'error'
+    # print err
+    # print 'recall'
+    # print recall
+    # print 'precision'
+    # print precision
+    # print 'specificity'
+    # print specificity
 
     print 'mean accuracy'
     print np.mean(acc)
