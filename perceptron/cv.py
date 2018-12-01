@@ -32,7 +32,10 @@ def main():
         quit()
     #  extract the data and the labels
     X, y = dataCollector.getCleanedData("data.csv")
-    results = np.zeros(foldcount)
+    accuracy = np.zeros(foldcount)
+    precision = np.zeros(foldcount)
+    recall = np.zeros(foldcount)
+    specificity = np.zeros(foldcount)
     seed(1)
     n, d = X.shape
 
@@ -82,20 +85,42 @@ def main():
         # extract the labels and the test points
         testSet = np.matrix(folds[i])
         n, d = testSet.shape
-        ttc = 0  # Total Test count
-        cc = 0  # Total correct count
+        # Matt is terrible
+        tp = 0
+        tn = 0
+        fp = 0
+        fn = 0
         for j in xrange(n):
             # extract the test point and test label
             test_point = testSet[j, 1:].T
             test_label = testSet[j, 0]
             # count if the test was good or not
-            if LP.test(theta, test_point) == test_label:
-                cc += 1
-            ttc += 1
+            testResult = LP.test(theta, test_point)
+
+            if testResult == 1 and test_label == 1:
+                tp += 1
+            if testResult == 1 and test_label == -1:
+                fp += 1
+            if testResult == -1 and test_label == 1:
+                fn += 1
+            if testResult == -1 and test_label == -1:
+                tn += 1
 
         # print the results of the test
-        sys.stdout.write('Fold %d, total correct %d / %d\n' % (i, cc, ttc))
-        results[i] = float(cc) / float(ttc)
+        accuracy[i] = float(tp + tn) / float(fn + fp + tp + tn)
+        recall[i] = float(tp) / float(tp+fn)
+        precision[i] = float(tp) / float(tp+fp)
+        specificity[i] = float(tn) / float(tn+fp)
+        error = np.ones(foldcount)
+        error -= accuracy
+
+    print accuracy
+    print error
+    print recall
+    print precision
+    print specificity
+
+    print np.mean(accuracy)
 
 
 main()
