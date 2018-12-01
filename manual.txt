@@ -14,3 +14,6 @@ Perceptron: Please see the manual.txt file in perceptron folder
 
 Understanding the Data:
 The bash script RUN_ME.sh should run all the files. The bash script also contains the individual commands. Please ignore anaconda warnings if any.
+
+Linear SVM:
+The bash script runsvm.sh in folder svm runs hyperparameter tuning, bootstrapping for 5, 10, and 20 bootstraps, k-fold cross-validation for 5 and 10 folds, leave-one-out cross-validation, and 2-fold cross-validation for C values 100, 1000, and 10000 to make an ROC curve.
