@@ -1,10 +1,10 @@
 import numpy as np
 import read_clean as dataCollector
-import linperceptron as LP
+import svm
 import sys
 
 
-def bootstrapping(B, X, y):
+def bootstrapping(B, X, y, C):
 
     accuracy = np.zeros(B)
     precision = np.zeros(B)
@@ -18,7 +18,7 @@ def bootstrapping(B, X, y):
         test_samples = list(set(range(n)) - set(train_samples))
 
         # train the model
-        theta = LP.train(1000, X[train_samples], y[train_samples])
+        theta = svm.train(X[train_samples], y[train_samples], C)
 
         testSet = X[test_samples]
         testLabels = y[test_samples]
@@ -36,7 +36,7 @@ def bootstrapping(B, X, y):
             # count if the test was good or not
 
             # test the model
-            testResult = LP.test(theta, test_point)
+            testResult = svm.test(theta, test_point)
 
             if testResult == 1 and test_label == 1:
                 tp += 1
@@ -47,9 +47,9 @@ def bootstrapping(B, X, y):
             if testResult == -1 and test_label == -1:
                 tn += 1
 
-        print 'tp, tn, fp, fn'
-        print tp, tn, fp, fn
-        print ''
+        #print 'tp, tn, fp, fn'
+        #print tp, tn, fp, fn
+        #print ''
 
         try:
             accuracy[b] = float(tp + tn) / float(fn + fp + tp + tn)
@@ -82,6 +82,7 @@ def bootstrapping(B, X, y):
 def main():
     try:
         B = int(sys.argv[1])
+        C = int(sys.argv[2])
     except IndexError:
         print 'Please list the number of bootstraps as a cmd line arg'
         print 'for example : python bootstrap.py 10'
@@ -92,7 +93,8 @@ def main():
     n, d = X.shape
 
     # create a dataset with the labels and the data mixed together
-    acc, err, recall, precision, specificity = bootstrapping(B, X, y)
+    acc, err, recall, precision, specificity = bootstrapping(B, X, y, C)
+    print "Using", str(B), "bootstaps, and C =", str(C), "\n"
     print 'accuracy'
     print acc
     print 'error'

@@ -169,10 +169,5 @@ def main():
     print 'mean specificity'
     print np.mean(specificity)
 
-    output = [acc, err, recall, precision, specificity]
-    import pandas as pd
-    df = pd.DataFrame(output)
-    df.to_csv("loocv.csv")
-
 
 main()
