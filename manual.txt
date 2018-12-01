@@ -1,4 +1,5 @@
-The data can be found in every folder titled “data.csv” and the read_clean.py processes the data.
+The data can be found in every folder titled “data.csv” (we do not have a dataset folder) and the "read_clean.py" processes the data.
+Each folder contains the code for each machine learning model. 
 
 Libraries to Install:
 pip install -U scikit-learn
@@ -8,3 +9,8 @@ The bash script RUN_ME.sh should run all the files. The bash script also contain
 
 Understanding the Data:
 The bash script RUN_ME.sh should run all the files. The bash script also contains the individual commands. Please ignore anaconda warnings if any.
+
+
+Things that take a long time to run:
+- Linear SVM: Hyperparameter tuning, LOOCV
+- Linear Perceptron: LOOCV
