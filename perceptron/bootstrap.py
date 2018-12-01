@@ -83,8 +83,8 @@ def main():
     try:
         B = int(sys.argv[1])
     except IndexError:
-        print 'Please list the number of folds for cross validation'
-        print 'as a command line argument, for example : python cv.py 10'
+        print 'Please list the number of bootstraps as a cmd line arg'
+        print 'for example : python bootstrap.py 10'
         quit()
 
     #  extract the data and the labels
