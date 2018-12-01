@@ -103,6 +103,9 @@ def cross_validation(X, y, foldcount):
 
         # making sure there are no zero denominators
         # probably unnecessary but just in case
+        print 'tp, tn, fp, fn'
+        print tp, tn, fp, fn
+        print ''
 
         try:
             accuracy[j] = float(tp + tn) / float(fn + fp + tp + tn)
