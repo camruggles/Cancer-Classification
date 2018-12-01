@@ -1,7 +1,11 @@
-import sys
 import numpy as np
-import svm
+import pandas as pd
+from ggplot import *
+
+import sys
 import read_clean as dataCollector
+from sklearn.cluster import KMeans
+
 
 from random import shuffle, seed
 
@@ -9,6 +13,7 @@ from random import shuffle, seed
 
 
 def cross_validation_split(y, folds=3):
+    seed(1)
     # breaking up the labels into positive labels and negative labels to
     # evenly distribute them
     y_positive = list(np.where(y == 1)[0])
@@ -20,7 +25,6 @@ def cross_validation_split(y, folds=3):
     n_p = int(len(y_positive)/folds)
     n_n = int(len(y_negative)/folds)
 
-    seed(1)
     shuffle(y_negative)
     shuffle(y_positive)
 
@@ -66,24 +70,43 @@ def cross_validation(X, y, foldcount):
             trainInd += split[i]
 
         # construct the training and testing sets
-
         trainSet = X[trainInd]
         trainLabels = y[trainInd]
 
         testSet = X[testInd]
         testLabels = y[testInd]
 
-        # train the model
-        theta = svm.train(trainSet, trainLabels, 1)
+        # K Means - Training
+        kmeans = KMeans(n_clusters = 2)
+        kmeans = kmeans.fit(trainSet) 
 
         n = len(testInd)
         # Matt is terrible
+        
+        testB = [[   6.981  ,   13.43   ,   43.79   ,  143.5    ,    0.117  ,
+          0.07568,    0.     ,    0.     ,    0.193  ,    0.07818]]
+        
+        testM = [[   28.11   ,    18.47   ,   188.5    ,  2499.     ,     0.1142 ,
+           0.1516 ,     0.3201 ,     0.1595 ,     0.1648 ,     0.05525]]
+        
+        benign = kmeans.predict(testB)
+        malignant = kmeans.predict(testM)
 
         # getting information on the statistical results
         tp = 0
         tn = 0
         fp = 0
         fn = 0
+        
+        y_kmeans = kmeans.predict(testSet)
+
+        # Converting X to a dataframe
+        X_predict_pd = pd.DataFrame(testSet)
+        # Appending y
+        X_predict_pd['diagnosis'] = y_kmeans
+    
+        print(ggplot(aes(x=0 , y=1, color = 'diagnosis'), data= X_predict_pd) + geom_point() + xlab("Dimension 1") + ylab("Dimension 2") + ggtitle("Cluster Data"))
+
         for i in xrange(n):
             # extract the test point and test label
             test_point = testSet[i]
@@ -91,8 +114,15 @@ def cross_validation(X, y, foldcount):
             # count if the test was good or not
 
             # test the model
-            testResult = svm.test(theta, test_point)
-
+            val = kmeans.predict(test_point.reshape(1, -1))
+            
+            if val == benign:
+                val = -1
+            elif val == malignant:
+                val = 1
+                
+            testResult = val
+                
             if testResult == 1 and test_label == 1:
                 tp += 1
             if testResult == 1 and test_label == -1:
@@ -104,9 +134,9 @@ def cross_validation(X, y, foldcount):
 
         # making sure there are no zero denominators
         # probably unnecessary but just in case
-        #print 'tp, tn, fp, fn'
-        #print tp, tn, fp, fn
-        #print ''
+        print 'tp, tn, fp, fn'
+        print tp, tn, fp, fn
+        print ''
 
         try:
             accuracy[j] = float(tp + tn) / float(fn + fp + tp + tn)
@@ -134,10 +164,10 @@ def cross_validation(X, y, foldcount):
     return accuracy, error, recall, precision, specificity
 
 
-def main():
+def k_fold(m):
 
     try:
-        folds = int(sys.argv[1])
+        folds = m
     except IndexError:
         print 'Please list the number of folds for cross validation'
         print 'as a command line argument, for example : python cv.py 10'
@@ -148,7 +178,6 @@ def main():
     # initializing output labels
     acc, err, recall, precision, specificity = cross_validation(X, y, folds)
 
-    print "Using", str(folds), "folds:\n"
     print 'accuracy'
     print acc
     print 'error'
@@ -170,7 +199,5 @@ def main():
     print np.mean(precision)
     print 'mean specificity'
     print np.mean(specificity)
-    print "\n"
 
-
-main()
+k_fold(10)

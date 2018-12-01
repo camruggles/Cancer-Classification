@@ -1,7 +1,8 @@
 import sys
 import numpy as np
-import svm
 import read_clean as dataCollector
+from sklearn import svm
+from sklearn.svm import SVC
 
 from random import shuffle, seed
 
@@ -51,6 +52,8 @@ def cross_validation(X, y, foldcount):
     specificity = np.zeros(foldcount)
     n, d = X.shape
 
+    alg = svm.SVC(kernel = 'rbf', gamma = 0.000001, C = 1000000)
+
     # extract k folds from the data
     split = cross_validation_split(y, foldcount)
 
@@ -74,7 +77,7 @@ def cross_validation(X, y, foldcount):
         testLabels = y[testInd]
 
         # train the model
-        theta = svm.train(trainSet, trainLabels, 1)
+        alg.fit(trainSet, trainLabels)
 
         n = len(testInd)
         # Matt is terrible
@@ -91,7 +94,7 @@ def cross_validation(X, y, foldcount):
             # count if the test was good or not
 
             # test the model
-            testResult = svm.test(theta, test_point)
+            testResult = alg.predict(testSet[i].reshape(1, -1))
 
             if testResult == 1 and test_label == 1:
                 tp += 1
@@ -104,9 +107,9 @@ def cross_validation(X, y, foldcount):
 
         # making sure there are no zero denominators
         # probably unnecessary but just in case
-        #print 'tp, tn, fp, fn'
-        #print tp, tn, fp, fn
-        #print ''
+        print 'tp, tn, fp, fn'
+        print tp, tn, fp, fn
+        print ''
 
         try:
             accuracy[j] = float(tp + tn) / float(fn + fp + tp + tn)
@@ -148,7 +151,6 @@ def main():
     # initializing output labels
     acc, err, recall, precision, specificity = cross_validation(X, y, folds)
 
-    print "Using", str(folds), "folds:\n"
     print 'accuracy'
     print acc
     print 'error'
@@ -170,7 +172,3 @@ def main():
     print np.mean(precision)
     print 'mean specificity'
     print np.mean(specificity)
-    print "\n"
-
-
-main()
