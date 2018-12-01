@@ -3,7 +3,7 @@ import numpy as np
 import svm
 import read_clean as dataCollector
 
-from random import shuffle
+from random import shuffle, seed
 
 #  Split a dataset into k foldss
 
@@ -20,6 +20,7 @@ def cross_validation_split(y, folds=3):
     n_p = int(len(y_positive)/folds)
     n_n = int(len(y_negative)/folds)
 
+    seed(1)
     shuffle(y_negative)
     shuffle(y_positive)
 

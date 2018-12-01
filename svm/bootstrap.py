@@ -116,6 +116,7 @@ def main():
     print np.mean(precision)
     print 'mean specificity'
     print np.mean(specificity)
+    print "\n"
 
 
 main()
