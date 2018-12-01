@@ -9,18 +9,29 @@ from random import shuffle
 
 
 def cross_validation_split(y, folds=3):
+    # breaking up the labels into positive labels and negative labels to
+    # evenly distribute them
     y_positive = list(np.where(y == 1)[0])
     y_negative = list(np.where(y == -1)[0])
+
+    # getting the size of the respective arrays
+    # n_p is number of positives
+    # n_n is number of negatives
     n_p = int(len(y_positive)/folds)
     n_n = int(len(y_negative)/folds)
 
     shuffle(y_negative)
     shuffle(y_positive)
 
+    # creating a 2d array
     split = []
     for i in xrange(folds):
         split.append([])
+
     k = folds
+
+    # filling the ten folds with indices such that positives and
+    # negatives are evenly distributed
     for i in range(0, k-1):
         split[i] += y_positive[i*n_p: (i+1)*n_p]
         split[i] += y_negative[i*n_n: (i+1)*n_n]
@@ -31,27 +42,21 @@ def cross_validation_split(y, folds=3):
     return split
 
 
-def main():
-    try:
-        foldcount = int(sys.argv[1])
-    except IndexError:
-        print 'Please list the number of folds for cross validation'
-        print 'as a command line argument, for example : python cv.py 10'
-        quit()
-    #  extract the data and the labels
-    X, y = dataCollector.getCleanedData("data.csv")
+def cross_validation(X, y, foldcount):
+
     accuracy = np.zeros(foldcount)
     precision = np.zeros(foldcount)
     recall = np.zeros(foldcount)
     specificity = np.zeros(foldcount)
     n, d = X.shape
 
-    # extract 10 folds from the data
+    # extract k folds from the data
     split = cross_validation_split(y, foldcount)
 
-    # for each fold, figure out how many data points are in the folds
-    #  excluding the one about to be tested
+    # running k fold x validation
     for j in xrange(foldcount):
+
+        # breaking up the folds into train and test
         trainInd = []
         testInd = split[j]
         for i in xrange(foldcount):
@@ -59,7 +64,7 @@ def main():
                 continue
             trainInd += split[i]
 
-        # construct the training set with the row count obtained
+        # construct the training and testing sets
 
         trainSet = X[trainInd]
         trainLabels = y[trainInd]
@@ -67,10 +72,13 @@ def main():
         testSet = X[testInd]
         testLabels = y[testInd]
 
+        # train the model
         theta = LP.train(1000, trainSet, trainLabels)
 
         n = len(testInd)
         # Matt is terrible
+
+        # getting information on the statistical results
         tp = 0
         tn = 0
         fp = 0
@@ -91,7 +99,8 @@ def main():
             if testResult == -1 and test_label == -1:
                 tn += 1
 
-        # print the results of the test
+        # making sure there are no zero denominators
+        # probably unnecessary but just in case
 
         try:
             accuracy[j] = float(tp + tn) / float(fn + fp + tp + tn)
@@ -115,18 +124,32 @@ def main():
 
         error = np.ones(foldcount)
         error -= accuracy
+
+
+def main():
+
+    try:
+        folds = int(sys.argv[1])
+    except IndexError:
+        print 'Please list the number of folds for cross validation'
+        print 'as a command line argument, for example : python cv.py 10'
+        quit()
+
+    #  extract the data and the labels
+    X, y = dataCollector.getCleanedData("data.csv")
+    # initializing output labels
+    acc, err, recall, precision, specificity = cross_validation(X, y, folds)
+
     print 'accuracy'
-    print accuracy
+    print acc
     print 'error'
-    print error
+    print err
     print 'recall'
     print recall
     print 'precision'
     print precision
     print 'specificity'
     print specificity
-
-    print np.mean(accuracy)
 
 
 main()
