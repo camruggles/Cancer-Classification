@@ -3,6 +3,7 @@ from sklearn import svm, model_selection
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
 import read_clean
+import cvKernel
 import matplotlib.pyplot as plt
 
 def bootstrapping_for_tuning(B, X_subset, y_subset, C, gamma):
@@ -24,6 +25,11 @@ def bootstrapping_for_tuning(B, X_subset, y_subset, C, gamma):
 
 X, y = read_clean.getCleanedData("data.csv")
 
+#choosing a good gamma and C to use - parameter tuning from GridSearchCV
+# grid_search = GridSearchCV(svm.SVC(kernel = 'rbf'), {'C': [100, 1000, 10000, 100000], 'gamma': [0.00001, 0.0001, 0.001, 0.01]}, cv=10)
+# grid_search.fit(X, y)
+# print grid_search.best_params_
+
 #hyperparameter tuning with cross validation (2-fold)
 positive_samples = list(np.where(y==1)[0])
 negative_samples = list(np.where(y==-1)[0])
@@ -37,8 +43,8 @@ samples_in_fold2 = positive_samples[len(positive_samples)/2:] + negative_samples
 # print samples_in_fold1
 # print samples_in_fold2
 
-C_list = [0.01, 0.1, 1, 10, 100]
-gamma_list = [0.01, 0.1, 1, 10, 100]
+C_list = [100000, 1000000, 10000000, 100000000]
+gamma_list = [0.00000001,0.0000001, 0.000001, 0.00001]
 B = 30
 
 y_pred = np.zeros(len(X))
@@ -99,6 +105,9 @@ print "Hyperparameter tuning err=", err
 ##############################################
 # bootstrapping for 5, 10, and 20
 ##############################################
+best_C = 1000000
+best_gamma = 0.000001
+
 print "bootstrapping err for 5= ", bootstrapping_for_tuning(5, X, y, best_C, best_gamma)
 print "bootstrapping err for 10= ", bootstrapping_for_tuning(10, X, y, best_C, best_gamma)
 print "bootstrapping err for 20= ", bootstrapping_for_tuning(20, X, y, best_C, best_gamma)
@@ -130,8 +139,14 @@ for i in range(n):
     y_pred[i] = rbf_svc.predict(X[i].reshape(1, -1))
 
 err = np.mean(y!=y_pred)
+# print np.shape(y)
+# print np.shape(y_pred)
 print "LOOCV err=", err
 
+print "5-fold CV"
+cvKernel.cross_validation(X, y, 5)
+print "10-fold CV"
+cvKernel.cross_validation(X, y, 10)
 
 #visualizing the data
 
