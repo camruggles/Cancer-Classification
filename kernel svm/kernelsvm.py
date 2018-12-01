@@ -44,6 +44,8 @@ samples_in_fold2 = positive_samples[len(positive_samples)/2:] + negative_samples
 
 # print samples_in_fold1
 # print samples_in_fold2
+print
+print 'HYPERPARAMETER TUNING'
 
 C_list = [100000, 1000000, 10000000, 100000000]
 gamma_list = [0.00000001,0.0000001, 0.000001, 0.00001]
@@ -109,6 +111,8 @@ print "Hyperparameter tuning err=", err
 # ##############################################
 best_C = 1000000
 best_gamma = 0.000001
+print
+print 'BOOTSTRAPPING'
 
 print "bootstrapping err for 5= ", bootstrapping_for_tuning(5, X, y, best_C, best_gamma)
 print "bootstrapping err for 10= ", bootstrapping_for_tuning(10, X, y, best_C, best_gamma)
@@ -117,6 +121,8 @@ print "bootstrapping err for 20= ", bootstrapping_for_tuning(20, X, y, best_C, b
 ##############################################
 # k-fold cross validation
 ##############################################
+print 
+print 'LOOCV CROSS VALIDATION'
 
 #LOOCV
 n = len(X)
@@ -145,9 +151,18 @@ err = np.mean(y!=y_pred)
 # print np.shape(y_pred)
 print "LOOCV err=", err
 
-#run     with values of 5 and 10 here
+#run with values of 5 and 10 here
+print 'K-FOLD CROSS VALIDATION'
+print("K FOLD FOR K = 2")
+k_fold(2)
+print("K FOLD FOR K = 5")
+k_fold(5)
+print("K FOLD FOR K = 10")
+k_fold(10)
 
 #visualizing the data
+print
+print 'VISUALIZATION'
 samples_in_fold1 = positive_samples[0:len(positive_samples)/2] + negative_samples[0:len(negative_samples)/2]
 samples_in_fold2 = positive_samples[len(positive_samples)/2:] + negative_samples[len(negative_samples)/2:]
 trainX = X[samples_in_fold1]

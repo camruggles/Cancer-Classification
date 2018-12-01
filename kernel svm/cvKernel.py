@@ -137,10 +137,10 @@ def cross_validation(X, y, foldcount):
     return accuracy, error, recall, precision, specificity
 
 
-def main():
+def k_fold(n):
 
     try:
-        folds = int(sys.argv[1])
+        folds = n
     except IndexError:
         print 'Please list the number of folds for cross validation'
         print 'as a command line argument, for example : python cv.py 10'
