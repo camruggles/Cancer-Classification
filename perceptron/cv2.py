@@ -88,6 +88,8 @@ def cross_validation(X, y, foldcount):
             test_point = testSet[i]
             test_label = testLabels[i]
             # count if the test was good or not
+
+            # test the model
             testResult = LP.test(theta, test_point)
 
             if testResult == 1 and test_label == 1:
@@ -124,6 +126,8 @@ def cross_validation(X, y, foldcount):
 
         error = np.ones(foldcount)
         error -= accuracy
+
+    return accuracy, error, recall, precision, specificity
 
 
 def main():
