@@ -3,98 +3,93 @@ import numpy as np
 import linperceptron as LP
 import read_clean as dataCollector
 
-
-from random import seed
-from random import randrange
+from random import shuffle
 
 #  Split a dataset into k foldss
 
 
-def cross_validation_split(dataset, folds=3):
-    dataset_split = list()
-    dataset_copy = list(dataset)
-    fold_size = int(len(dataset) / folds)
-    for i in range(folds):
-        fold = list()
-        while len(fold) < fold_size:
-            index = randrange(len(dataset_copy))
-            fold.append(dataset_copy.pop(index))
-        dataset_split.append(fold)
-    return dataset_split
+def cross_validation_split(y, folds=3):
+    # breaking up the labels into positive labels and negative labels to
+    # evenly distribute them
+    y_positive = list(np.where(y == 1)[0])
+    y_negative = list(np.where(y == -1)[0])
+
+    # getting the size of the respective arrays
+    # n_p is number of positives
+    # n_n is number of negatives
+    n_p = int(len(y_positive)/folds)
+    n_n = int(len(y_negative)/folds)
+
+    shuffle(y_negative)
+    shuffle(y_positive)
+
+    # creating a 2d array
+    split = []
+    for i in xrange(folds):
+        split.append([])
+
+    k = folds
+
+    # filling the ten folds with indices such that positives and
+    # negatives are evenly distributed
+    for i in range(0, k-1):
+        split[i] += y_positive[i*n_p: (i+1)*n_p]
+        split[i] += y_negative[i*n_n: (i+1)*n_n]
+
+    split[k-1] += y_positive[(k-1)*n_p:]
+    split[k-1] += y_negative[(k-1)*n_n:]
+
+    return split
 
 
-def main():
-    try:
-        foldcount = int(sys.argv[1])
-    except IndexError:
-        print 'Please list the number of folds for cross validation'
-        print 'as a command line argument, for example : python cv.py 10'
-        quit()
-    #  extract the data and the labels
-    X, y = dataCollector.getCleanedData("data.csv")
+def cross_validation(X, y, foldcount):
+
     accuracy = np.zeros(foldcount)
     precision = np.zeros(foldcount)
     recall = np.zeros(foldcount)
     specificity = np.zeros(foldcount)
-    seed(1)
     n, d = X.shape
 
-    # create a dataset with the labels and the data mixed together
-    dataset = np.zeros((n, d+1))
-    dataset[:, 0] = y
-    dataset[:, 1:] = X
+    # extract k folds from the data
+    split = cross_validation_split(y, foldcount)
 
-    # extract 10 folds from the data
-    folds = cross_validation_split(dataset, foldcount)
-    # print(folds)
+    # running k fold x validation
+    for j in xrange(foldcount):
 
-    # for each fold, figure out how many data points are in the folds
-    #  excluding the one about to be tested
-    for i in xrange(foldcount):
-        totalRows = 0
-        totalCols = 0
-        n, d = dataset.shape
-        totalCols = d
-        for j in xrange(foldcount):
+        # breaking up the folds into train and test
+        trainInd = []
+        testInd = split[j]
+        for i in xrange(foldcount):
             if j == i:
                 continue
-            currentFold = np.matrix(folds[j])
-            n, d = currentFold.shape
-            totalRows += n
+            trainInd += split[i]
 
-        # construct the training set with the row count obtained
-        # and fill it with the training data
-        trainingSet = np.empty((totalRows, totalCols))
-        rowCounter = 0
-        for j in xrange(foldcount):
-            if j == i:
-                continue
-            currentfold = np.matrix(folds[j])
-            n, d = currentfold.shape
-            trainingSet[rowCounter:rowCounter+n, :] = currentfold[j]
-            rowCounter += n
+        # construct the training and testing sets
 
-        # extract the labels and the data
-        y2 = trainingSet[:, 0]
-        X2 = trainingSet[:, 1:]
+        trainSet = X[trainInd]
+        trainLabels = y[trainInd]
 
-        # train the perceptron
-        theta = LP.train(1000, X2, y2)
+        testSet = X[testInd]
+        testLabels = y[testInd]
 
-        # use the last fold for the test set
-        # extract the labels and the test points
-        testSet = np.matrix(folds[i])
-        n, d = testSet.shape
+        # train the model
+        theta = LP.train(1000, trainSet, trainLabels)
+
+        n = len(testInd)
         # Matt is terrible
+
+        # getting information on the statistical results
         tp = 0
         tn = 0
         fp = 0
         fn = 0
-        for j in xrange(n):
+        for i in xrange(n):
             # extract the test point and test label
-            test_point = testSet[j, 1:].T
-            test_label = testSet[j, 0]
+            test_point = testSet[i]
+            test_label = testLabels[i]
             # count if the test was good or not
+
+            # test the model
             testResult = LP.test(theta, test_point)
 
             if testResult == 1 and test_label == 1:
@@ -106,21 +101,70 @@ def main():
             if testResult == -1 and test_label == -1:
                 tn += 1
 
-        # print the results of the test
-        accuracy[i] = float(tp + tn) / float(fn + fp + tp + tn)
-        recall[i] = float(tp) / float(tp+fn)
-        precision[i] = float(tp) / float(tp+fp)
-        specificity[i] = float(tn) / float(tn+fp)
+        # making sure there are no zero denominators
+        # probably unnecessary but just in case
+
+        try:
+            accuracy[j] = float(tp + tn) / float(fn + fp + tp + tn)
+        except ZeroDivisionError:
+            accuracy[j] = 0.0
+
+        try:
+            recall[j] = float(tp) / float(tp+fn)
+        except ZeroDivisionError:
+            recall[j] = 0.0
+
+        try:
+            precision[j] = float(tp) / float(tp+fp)
+        except ZeroDivisionError:
+            precision[j] = 0.0
+
+        try:
+            specificity[j] = float(tn) / float(tn+fp)
+        except ZeroDivisionError:
+            specificity[j] = 0.0
+
         error = np.ones(foldcount)
         error -= accuracy
 
-    print accuracy
-    print error
+    return accuracy, error, recall, precision, specificity
+
+
+def main():
+
+    try:
+        folds = int(sys.argv[1])
+    except IndexError:
+        print 'Please list the number of folds for cross validation'
+        print 'as a command line argument, for example : python cv.py 10'
+        quit()
+
+    #  extract the data and the labels
+    X, y = dataCollector.getCleanedData("data.csv")
+    # initializing output labels
+    acc, err, recall, precision, specificity = cross_validation(X, y, folds)
+
+    print 'accuracy'
+    print acc
+    print 'error'
+    print err
+    print 'recall'
     print recall
+    print 'precision'
     print precision
+    print 'specificity'
     print specificity
 
-    print np.mean(accuracy)
+    print 'mean accuracy'
+    print np.mean(acc)
+    print 'mean error'
+    print np.mean(err)
+    print 'mean recall'
+    print np.mean(recall)
+    print 'mean precision'
+    print np.mean(precision)
+    print 'mean specificity'
+    print np.mean(specificity)
 
 
 main()
