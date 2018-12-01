@@ -1,6 +1,5 @@
 import read_clean
 import matplotlib.pyplot as plt
-%matplotlib inline
 import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans
@@ -35,6 +34,7 @@ plt.plot(list(inertia.keys()), list(inertia.values()))
 plt.xlabel("Number of clusters")
 plt.ylabel("Inertia")
 plt.show() 
+
 
 ###############################################
 # Visualizing Cluster data
@@ -74,62 +74,4 @@ X_pd = pd.DataFrame(X)
 X_pd['diagnosis'] = y
     
 print(ggplot(aes(x=0 , y=1, color = 'diagnosis'), data= X_pd) + geom_point() + xlab("Dimension 1") + ylab("Dimension 2") + ggtitle("Actual Data"))
-
-###############################################
-# LOOCV
-###############################################
-
-n = len(X)
-d = len(X[0])
-
-y_pred = np.zeros((n,1))
-X,y = read_clean.getCleanedData("data.csv")
-y = [0 if x == -1 else x for x in y]
-
-for i in range(n):
-    all_except_i = range(i) + range(i+1,n)
-    
-    # Getting the Data
-    X,y = read_clean.getCleanedData("data.csv")
-    y = [0 if x == -1 else x for x in y]
-
-    X_train = X[all_except_i]
-    y_train = [y[t] for t in all_except_i]
-    
-    # K Means
-    kmeans = KMeans(n_clusters = 2, random_state = 3)
-    kmeans = kmeans.fit(X_train) 
-    
-    y_pred[i] = kmeans.predict([X[i]])
-
-err = np.mean(y!=y_pred)
-print(err)
-
-###############################################
-# Chance
-###############################################
-
-
-# Malignant is denoted by 1 and Benign as -1 in the original dataset
-# Converting benign to 0 
-
-X,y = read_clean.getCleanedData("data.csv")
-y = [0 if x == -1 else x for x in y]
-
-total = len(y)
-malignant =  sum(y)
-benign = total - malignant
-
-print(total, malignant, benign)
-
-# Classifier that predicts Benign always
-print(float(malignant)/total)
-
-# Classifier that predicts malignant always
-print(float(benign)/total)
-
-# Thus, this is not a useful method as the error is greater than 0.37%
-
-
-
 
