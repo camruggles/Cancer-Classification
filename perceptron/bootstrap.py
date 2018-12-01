@@ -76,8 +76,6 @@ def bootstrapping(B, X, y):
 
     return accuracy, error, recall, precision, specificity
 
-    return bs_err
-
 
 def main():
     try:
@@ -114,6 +112,13 @@ def main():
     print np.mean(precision)
     print 'mean specificity'
     print np.mean(specificity)
+
+    output = [acc, err, recall, precision, specificity]
+    import pandas as pd
+    df = pd.DataFrame(output)
+
+    s = "bootstrap{}.csv".format(B)
+    df.to_csv(s)
 
 
 main()

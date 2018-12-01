@@ -4,15 +4,18 @@ import linperceptron as LP
 import read_clean as dataCollector
 
 from random import shuffle
+from random import seed
 
 #  Split a dataset into k foldss
 
 
 def cross_validation_split(y, folds=3):
+
     # breaking up the labels into positive labels and negative labels to
     # evenly distribute them
     y_positive = list(np.where(y == 1)[0])
     y_negative = list(np.where(y == -1)[0])
+    seed(0)
 
     # getting the size of the respective arrays
     # n_p is number of positives
@@ -143,6 +146,7 @@ def main():
         quit()
 
     #  extract the data and the labels
+
     X, y = dataCollector.getCleanedData("data.csv")
     # initializing output labels
     acc, err, recall, precision, specificity = cross_validation(X, y, folds)
@@ -172,7 +176,9 @@ def main():
     output = [acc, err, recall, precision, specificity]
     import pandas as pd
     df = pd.DataFrame(output)
-    df.to_csv("loocv.csv")
+
+    s = "kfold{}.csv".format(folds)
+    df.to_csv(s)
 
 
 main()
