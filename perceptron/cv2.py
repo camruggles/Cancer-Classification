@@ -155,5 +155,16 @@ def main():
     print 'specificity'
     print specificity
 
+    print 'mean accuracy'
+    print np.mean(acc)
+    print 'mean error'
+    print np.mean(err)
+    print 'mean recall'
+    print np.mean(recall)
+    print 'mean precision'
+    print np.mean(precision)
+    print 'mean specificity'
+    print np.mean(specificity)
+
 
 main()
