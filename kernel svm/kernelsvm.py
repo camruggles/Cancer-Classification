@@ -97,6 +97,14 @@ err = np.mean(y!=y_pred)
 print "Hyperparameter tuning err=", err
 
 ##############################################
+# bootstrapping for 5, 10, and 20
+##############################################
+print
+print "bootstrapping err for 5= ", bootstrapping_for_tuning(5, X, y, best_C, best_gamma)
+print "bootstrapping err for 10= ", bootstrapping_for_tuning(10, X, y, best_C, best_gamma)
+print "bootstrapping err for 20= ", bootstrapping_for_tuning(20, X, y, best_C, best_gamma)
+
+##############################################
 # k-fold cross validation
 ##############################################
 
@@ -124,6 +132,7 @@ for i in range(n):
 
 err = np.mean(y!=y_pred)
 print "LOOCV err=", err
+
 
 #visualizing the data
 
