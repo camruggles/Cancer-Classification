@@ -1,4 +1,5 @@
 The data can be found in every folder titled “data.csv” and the read_clean.py processes the data.
+PLEASE NOTE: SOME FILES HAVE SEEDS FOR RANDOMIZATION TO ALLOW TAS TO REPROUCE THE DATA IN OUR FINAL REPORT. 
 
 Libraries to Install:
 pip install -U scikit-learn
