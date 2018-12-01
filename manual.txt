@@ -1,1 +1,10 @@
+The data can be found in every folder titled “data.csv” and the read_clean.py processes the data.
+
+Libraries to Install:
 pip install -U scikit-learn
+
+K-Means:
+The bash script RUN_ME.sh should run all the files. The bash script also contains the individual commands. Please ignore anaconda warnings if any.
+
+Understanding the Data:
+The bash script RUN_ME.sh should run all the files. The bash script also contains the individual commands. Please ignore anaconda warnings if any.

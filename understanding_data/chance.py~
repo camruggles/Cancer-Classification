@@ -1,7 +1,7 @@
 # Malignant is denoted by 1 and Benign as -1 in the original dataset
 # Converting benign to 0 
 
-import read_clean
+import read_clean.py
 
 X,y = read_clean.getCleanedData("data.csv")
 y = [0 if x == -1 else x for x in y]
