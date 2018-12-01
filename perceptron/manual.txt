@@ -1,0 +1,20 @@
+To run the code you can type in
+
+run.sh
+
+and it will print out the results for the mean of each of the following:
+accuracy, error, precision, recall, specificity
+
+on 10 fold cross validation or 10 bootstraps
+
+
+or you could get the same results by running
+
+for  k fold cross
+python cv.py 10
+or
+for bootstrapping
+python bootstrap.py 10
+
+
+you can type in loocv.py to do leave one out cross validation

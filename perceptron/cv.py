@@ -106,9 +106,6 @@ def cross_validation(X, y, foldcount):
 
         # making sure there are no zero denominators
         # probably unnecessary but just in case
-        print 'tp, tn, fp, fn'
-        print tp, tn, fp, fn
-        print ''
 
         try:
             accuracy[j] = float(tp + tn) / float(fn + fp + tp + tn)
@@ -150,17 +147,6 @@ def main():
     X, y = dataCollector.getCleanedData("data.csv")
     # initializing output labels
     acc, err, recall, precision, specificity = cross_validation(X, y, folds)
-
-    print 'accuracy'
-    print acc
-    print 'error'
-    print err
-    print 'recall'
-    print recall
-    print 'precision'
-    print precision
-    print 'specificity'
-    print specificity
 
     print 'mean accuracy'
     print np.mean(acc)

@@ -62,9 +62,9 @@ def loocv(X, y):
 
         # making sure there are no zero denominators
         # probably unnecessary but just in case
-        print 'tp, tn, fp, fn'
-        print tp, tn, fp, fn
-        print ''
+        # print 'tp, tn, fp, fn'
+        # print tp, tn, fp, fn
+        # print ''
 
         try:
             accuracy[j] = float(tp + tn) / float(fn + fp + tp + tn)
@@ -87,8 +87,6 @@ def loocv(X, y):
             specificity[j] = 0.0
 
     error = np.ones(n)
-    print error.shape
-    print accuracy.shape
     error -= accuracy
 
     return accuracy, error, recall, precision, specificity
@@ -99,21 +97,20 @@ def main():
     #  extract the data and the labels
     X, y = dataCollector.getCleanedData("data.csv")
     n, d = X.shape
-    print 'Folds: '
-    print n
+
     # initializing output labels
     acc, err, recall, precision, specificity = loocv(X, y)
 
-    print 'accuracy'
-    print acc
-    print 'error'
-    print err
-    print 'recall'
-    print recall
-    print 'precision'
-    print precision
-    print 'specificity'
-    print specificity
+    # print 'accuracy'
+    # print acc
+    # print 'error'
+    # print err
+    # print 'recall'
+    # print recall
+    # print 'precision'
+    # print precision
+    # print 'specificity'
+    # print specificity
 
     print 'mean accuracy'
     print np.mean(acc)
