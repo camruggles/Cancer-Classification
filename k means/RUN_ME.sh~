@@ -1,0 +1,13 @@
+#!/bin/bash  
+
+# Hyperparameter Tuning
+python hyperparameter.py
+
+# LOOCV
+python LOOCV.py
+
+# K Fold Cross Validation for k = 5 and 10
+python kfold.py
+
+# Bootstraps
+python bootstrapping.py

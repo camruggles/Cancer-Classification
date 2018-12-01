@@ -6,11 +6,11 @@ import numpy as np
 from sklearn.cluster import KMeans
 from ggplot import *
 
+X,y = read_clean.getCleanedData("data.csv")
 n = len(X)
 d = len(X[0])
 
 y_pred = np.zeros((n,1))
-X,y = read_clean.getCleanedData("data.csv")
 
 for i in range(n):
     all_except_i = range(i) + range(i+1,n)

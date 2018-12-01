@@ -200,4 +200,9 @@ def k_fold(m):
     print 'mean specificity'
     print np.mean(specificity)
 
+print("K FOLD FOR K = 2")
+k_fold(2)
+print("K FOLD FOR K = 5")
+k_fold(5)
+print("K FOLD FOR K = 10")
 k_fold(10)
