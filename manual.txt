@@ -10,5 +10,7 @@ The bash script RUN_ME.sh should run all the files. The bash script also contain
 Kernel SVM: 
 The bash script RUN_KERNEL in the folder kernel svm runs the command python kernelsvm.py. The hyperparameter tuning and LOOCV can take a long time to run. 
 
+Perceptron: Please see the manual.txt file in perceptron folder
+
 Understanding the Data:
 The bash script RUN_ME.sh should run all the files. The bash script also contains the individual commands. Please ignore anaconda warnings if any.
