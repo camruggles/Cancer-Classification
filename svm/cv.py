@@ -43,7 +43,7 @@ def cross_validation_split(y, folds=3):
     return split
 
 
-def cross_validation(X, y, foldcount):
+def cross_validation(X, y, foldcount, C):
 
     accuracy = np.zeros(foldcount)
     precision = np.zeros(foldcount)
@@ -74,7 +74,7 @@ def cross_validation(X, y, foldcount):
         testLabels = y[testInd]
 
         # train the model
-        theta = svm.train(trainSet, trainLabels, 1)
+        theta = svm.train(trainSet, trainLabels, C)
 
         n = len(testInd)
         # Matt is terrible
@@ -138,6 +138,7 @@ def main():
 
     try:
         folds = int(sys.argv[1])
+        C = int(sys.argv[2])
     except IndexError:
         print 'Please list the number of folds for cross validation'
         print 'as a command line argument, for example : python cv.py 10'
@@ -146,7 +147,7 @@ def main():
     #  extract the data and the labels
     X, y = dataCollector.getCleanedData("data.csv")
     # initializing output labels
-    acc, err, recall, precision, specificity = cross_validation(X, y, folds)
+    acc, err, recall, precision, specificity = cross_validation(X, y, folds, C)
 
     print "Using", str(folds), "folds:\n"
     print 'accuracy'
