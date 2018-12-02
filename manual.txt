@@ -2,7 +2,14 @@ The data can be found in every folder titled “data.csv” and the read_clean.p
 PLEASE NOTE: SOME FILES HAVE SEEDS FOR RANDOMIZATION TO ALLOW TAS TO REPROUCE THE DATA IN OUR FINAL REPORT. 
 
 Libraries to Install:
+use -U if necessary
 pip install -U scikit-learn
+pip install pandas
+pip install numpy
+pip install matplotlib
+pip install ggplot
+
+
 
 K-Means:
 The bash script RUN_ME.sh should run all the files. The bash script also contains the individual commands. Please ignore anaconda warnings if any.
@@ -10,7 +17,10 @@ The bash script RUN_ME.sh should run all the files. The bash script also contain
 Kernel SVM: 
 The bash script RUN_KERNEL in the folder kernel svm runs the command python kernelsvm.py. The hyperparameter tuning and LOOCV can take a long time to run. 
 
-Perceptron: Please see the manual.txt file in perceptron folder
+Perceptron: Please see the manual.txt file in perceptron folder for more details.
+use run.sh to run all the files, including loocv.
+Loocv was time consuming, fyi.
+
 
 Understanding the Data:
 The bash script RUN_ME.sh should run all the files. The bash script also contains the individual commands. Please ignore anaconda warnings if any.
