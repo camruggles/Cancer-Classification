@@ -1,0 +1,85 @@
+These files will take roughly 11 minutes to run collectively
+
+cross validation on ten folds
+mean accuracy
+0.746758241758
+mean error
+0.253241758242
+mean recall
+0.338095238095
+mean precision
+0.87032967033
+mean specificity
+0.988571428571
+
+cross validation on 5 folds
+mean accuracy
+0.653626805839
+mean error
+0.346373194161
+mean recall
+0.0701298701299
+mean precision
+0.8
+mean specificity
+1.0
+
+cross validation on 2 folds
+mean accuracy
+0.627415369409
+mean error
+0.372584630591
+mean recall
+0.0
+mean precision
+0.0
+mean specificity
+1.0
+
+10 bootstraps
+mean accuracy
+0.802836978807
+mean error
+0.197163021193
+mean recall
+0.799450349663
+mean precision
+0.783569127955
+mean specificity
+0.815475660224
+
+5 bootstraps
+mean accuracy
+0.82277733383
+mean error
+0.17722266617
+mean recall
+0.792037207391
+mean precision
+0.805054325956
+mean specificity
+0.830019768089
+
+20 bootstraps
+mean accuracy
+0.822075472297
+mean error
+0.177924527703
+mean recall
+0.778910375981
+mean precision
+0.809375912272
+mean specificity
+0.84952701883
+
+Leave One Out Cross Validation
+mean accuracy
+0.857644991213
+mean error
+0.142355008787
+mean recall
+0.314586994728
+mean precision
+0.314586994728
+mean specificity
+0.543057996485
